@@ -1,0 +1,189 @@
+Question 1:  (SDLC Automation)
+
+
+A DevOps Engineer is implementing a mechanism for canary testing an application on AWS. The application was recently modified and went through security, unit, and functional testing. The application needs to be deployed on an AutoScaling group and must use a Classic Load Balancer.
+
+Which design meets the requirement for canary testing?
+
+
+
+A.) Create a different classic load balancer and auto scaling group for blue/green environments. Use amazon route 53 & create weighted A records on classic load balancer
+
+
+With Weighted records, we can set set the appropriate weight to the DNS record and divide the traffic based on requirement like 10% traffic to ELB 1 and 90% traffic to ELB 2.
+
+Blue/Green Deployment 
+
+- Blue/green deployments provide releases with near zero-downtime and rollback capabilities. The fundamental idea behind blue/green deployment is to shift traffic between two identical environments that are running different versions of your application. The blue environment represents the current application version serving production traffic. In parallel, the green environment is staged running a different version of your application. After the green environment is ready and tested, production traffic is redirected from blue to green. If any problems are identified, you can roll back by reverting traffic back to the blue environment.
+
+
+- Blue is production traffic
+
+- Green is tesing and Upgrading
+
+
+- After you deploy the green environment, you have the opportunity to validate it. You might do that with test traffic before sending production traffic to the green environment, or by using a very small fraction of production traffic, to better reflect real user traffic. This is called canary analysis or canary testing. If you discover the green environment is not operating as expected, there is no impact on the blue environment. You can route traffic back to it, minimizing impaired operation or downtime and limiting the blast radius of impact.
+
+
+https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/introduction.html
+
+
+
+- You can shift traffic all at once or you can do a weighted distribution. For weighted distribution with Amazon Route 53, you can define a percentage of traffic to go to the green environment and gradually update the weights until the green environment carries the full production traffic. This provides the ability to perform canary analysis where a small percentage of production traffic is introduced to a new environment. You can test the new code and monitor for errors, limiting the blast radius if any issues are encountered. It also allows the green environment to scale out to support the full production load if you’re using Elastic Load Balancing(ELB), for example. ELB automatically scales its request-handling capacity to meet the inbound application traffic; the process of scaling isn’t instant, so we recommend that you test, observe, and understand your traffic patterns. Load balancers can also be pre-warmed (configured for optimum capacity) through a support request.
+
+
+https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/update-dns-routing-with-amazon-route-53.html
+
+
+ 
+
+Question 2: (High Availability and Fault tolerance)
+
+
+You have just recently deployed an application on EC2 instances behind an ELB.
+
+After a couple of weeks, customers are complaining on receiving errors from the application.
+
+You want to diagnose the errors and are trying to get errors from the ELB access logs. But the ELB access logs are empty.
+
+What is the reason for this?
+
+
+Answer. Access logs is an optional feature of Elastic Load Balancing that is disabled by default.
+
+
+Lecture 189 ELB access logs
+
+
+https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
+
+
+
+Question 3: (SDLC Automation)
+ 
+You are building a Ruby on Rails application for internal, non-production use which uses MySQL as a database. You want developers without very much AWS experience to be able to deploy new code with a single command line push. You also want to set this up as simply as possible.
+
+Which tool is ideal for this setup?
+
+
+
+A.AWSNElastic Beanstalk
+
+
+Elastic Beanstalk's primary mode of operation exactly supports this use case out of the box. It is simpler than all the other options for this question. With Elastic Beanstalk, you can quickly deploy and manage applications in the AWS cloud without worrying about the infrastructure that runs those applications. AWS Elastic Beanstalk reduces management complexity without restricting choice or control. You simply upload your application, and Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and application health monitoring
+
+
+
+Question 4:(High Availability and Fault tolerance)
+
+
+A company is using tagging to allocate AWS costs. The company has Amazon EC2 instances that run in Auto Scaling groups.
+
+The Amazon Elastic Block Store (Amazon EBS) volumes that are attached to the EC2 instances are being created without the appropriate cost center tags.
+
+A DevOps engineer must ensure that the new EBS volumes are properly tagged. What is the MOST efficient solution that meets this requirement?
+
+
+Answer.Update the auto scaling group launch template to include the cost center tags for EBS volumes
+
+Lecture 198 Tagging Auto scaling group
+
+
+Tags are not propagated to Amazon EBS volumes. To add tags to Amazon EBS volumes, specify the tags in a launch template.
+
+
+Question 5: (SDLC Automation)
+
+A Development team uses AWS CodeCommit for source code control. Developers apply their changes to various feature branches and create pull requests to move those changes to the master branch when they are ready for production.
+
+A direct push to the master branch should not be allowed. The team applied the AWS managed policy AWSCodeCommitPowerUser to the Developers’ IAM Rote, but now members are able to push to the master branch directly on every repository in the AWS account.
+
+What actions should be taken to restrict this?
+
+
+
+Answer - Create an additional policy to include a deny rule for the codecommit:GitPush action and include a restriction for the specific repositories in the resource statement with a condition for the master refernce
+
+
+https://aws.amazon.com/pt/blogs/devops/refining-access-to-branches-in-aws-codecommit/
+
+
+Question 6: (Monitoring and logging)
+
+
+A company gives its employees limited rights to AWS. DevOps engineers have the ability to assume an administrator role. For tracking purposes, the security team wants to receive a near-real-time notification when the administrator role is assumed.
+
+
+How should this be accomplished?
+
+
+
+Answer - Create an Amazon EventBridge (Amazon cloudwatch events) events rule using an aws API call that uses an AWS CloudTrail event pattern to trigger an AWS Lambda function that publishes a message to an Amazon SNS topic if the administrator role is assumed.
+
+
+Question 7:
+
+An online retail company based in the United States plans to expand its operations to Europe and Asia in the next six months. Its product currently runs on Amazon EC2 instances behind an Application Load Balancer.
+
+The instances run in an Amazon EC2 Auto Scaling group across multiple Availability Zones. All data is stored in an Amazon Aurora database instance.
+
+When the product is deployed in multiple regions, the company wants a single product catalog across all regions, but for compliance purposes, its customer information and purchases must be kept in each region.
+
+How should the company meet these requirements with the LEAST amount of application changes?
+
+Answer - Use Aurora with read replicas for the product catalog and additional local aurora instances in each region for the customer information & purchases
+
+
+Question 8:
+You have an application running a specific process that is critical to the application's functionality and have added the health check process to your Auto Scaling Group.
+
+The instances are showing healthy but the application itself is not working as it should.
+
+What could be the issue with the health check, since it is still showing the instances as healthy.
+
+
+Answer: The health check is not checking the application process
+
+Lecture 197 Auto scaling health checks
+
+
+
+Question 9:
+An Engineering team manages a Node.js e-commerce application. The current environment consists of the following components:
+
+Amazon S3 buckets for storing content
+Amazon EC2 for the front-end web servers
+AWS Lambda for executing image processing
+Amazon DynamoDB for storing session-related data
+The team expects a significant increase in traffic to the site. The application should handle the additional load without interruption.
+
+The team ran initial tests by adding new servers to the EC2 front-end to handle the larger load, but the instances took up to 20 minutes to become fully configured. The team wants to reduce this configuration time.
+
+What changes will the Engineering team need to implement to make the solution the MOST resilient and highly available while meeting the expected increase in demand?
+
+
+
+
+
+Answer:
+ Use AWS Elastic Beanstalk with custom AMI including all web components. deploy the platform by using an auto sclaing group behind an application load balancer across multiple availability zones. Implement amazon dynamo DB auto scaling. Use amazon route 53 to point the application DNA record to the Elastic beanstalk load balancer
+
+
+
+This is correct answer since it states that a custom AMI needs to be used which has all the components. This will in-turn reduce the overall time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
