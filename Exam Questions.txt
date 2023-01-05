@@ -174,6 +174,76 @@ This is correct answer since it states that a custom AMI needs to be used which 
 
 
 
+Question 10:
+A company is implementing AWS CodePipeline to automate its testing process. The company wants to be notified when the execution state fails and used the following custom event pattern in Amazon CloudWatch:
+
+Which type of events will match this event pattern?
+
+Answer:
+
+All rejected or failed approval actions across all the pipelines
+
+https://docs.aws.amazon.com/codepipeline/latest/userguide/detect-state-changes-cloudwatch-events.html
+
+
+
+Question 11:
+A DevOps Engineer administers an application that manages video files for a video production company. The application runs on Amazon EC2 instances behind an ELB Application Load Balancer.
+
+The instances run in an Auto Scaling group across multiple Availability Zones. Data is stored in an Amazon RDS PostgreSQL Multi-AZ DB instance, and the video files are stored in an Amazon S3 bucket. On a typical day, 50 GB of new videos are added to the S3 bucket.
+
+The Engineer must implement a multi-region disaster recovery plan with the least data loss and the lowest recovery times. The current application infrastructure is already described using AWS CloudFormation.
+
+Which deployment option should the Engineer choose to meet the uptime and recovery objectives for the system?
+
+
+
+Answer: Launch the application from the cloudformation template in the second region, which sets the capacity of the auto scaling group to 1. Create an amazon RDS read replica in the second region, enable cross region replication between the original s3 bucket and new s3 bucket. To fail over, promote the read replica as master. Update the cloudformation stack and increase the capacity of the auto scaling group.
+
+
+Question 12:
+A social networking service runs a web API that allows its partners to search public posts.
+
+Post data is stored in Amazon DynamoDB and indexed by AWS Lambda functions, with an Amazon ES domain storing the indexes and providing search functionality to the application.
+
+The service needs to maintain full capacity during deployments and ensure that failed deployments do not cause downtime or reduced capacity, or prevent subsequent deployments.
+
+How can these requirements be met?
+
+
+
+
+Answer: Deploy the web application, lambda functions, DynamoDB tables, and Amazon ES domain in an AWS cloudformation template. Deploy changes with an AWS codedeploy blue/green deployment
+
+Question 13:
+A Development team is adding a new country to an e-commerce application.
+
+This addition requires that new application features be added to the shipping component of the application.
+
+The team has not decided if all new features should be added, as some will take approximately six weeks to build. While the final decision on the shipping component features is being made, other team members are continuing to work on other features of the application.
+
+Based on this situation, how should the application feature deployments be managed?
+
+
+
+
+Answer: Add the code updated as commits to a feature branch. Merger the commits to a release branch as feautre are ready.
+
+Question 14:
+A company has microservices running in AWS Lambda that read data from Amazon DynamoDB. The Lambda code is manually deployed by Developers after successful testing. The company now needs the tests and deployments be automated and run in the cloud. Additionally, traffic to the new versions of each microservice should be incrementally shifted over time after deployment.
+
+What solution meets all the requirements, ensuring the MOST developer velocity?
+
+Answer:
+
+Create an AWS codepipelinne configuration & ser up the course code step to trigger when code is pushed. Set up the build step to use AWS code Build to run the tests. Set up an AWS codeDeploy configuration to deploy, then select the codeDeployDefault. LambdaLinear10PercentEvery3Minutes option.
+
+
+
+https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-configurations.html
+
+
+
 
 
 
